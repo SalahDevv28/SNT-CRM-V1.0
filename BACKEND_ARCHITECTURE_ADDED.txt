@@ -1,0 +1,371 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                                                                            ║
+║    ✅ SNT CRM - BACKEND ARCHITECTURE ADDED TO SCOPE OF WORK ✅             ║
+║                                                                            ║
+║         Complete Supabase BaaS "Vibe Coding" Implementation Plan           ║
+║                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+📄 UPDATED DOCUMENT: SNT_CRM_FINAL_SCOPE_OF_WORK.md
+═══════════════════════════════════════════════════════════════════════════
+
+✅ NEW CONTENT ADDED (Lines 240-540)
+
+═══════════════════════════════════════════════════════════════════════════
+SECTION: 🏗️ BACKEND ARCHITECTURE (Supabase BaaS - "Vibe Coding")
+═══════════════════════════════════════════════════════════════════════════
+
+Comprehensive backend architecture guide including:
+
+✓ THREE-TIER ARCHITECTURE DIAGRAM
+  ├─ Frontend Layer (Next.js + React)
+  ├─ Supabase Middleware (APIs & Auth)
+  └─ Database & Backend Layer (PostgreSQL + Rules)
+
+✓ CORE SUPABASE FEATURES (6 sections)
+
+  1. PostgREST Auto-Generated APIs
+     ├─ No manual API routes needed
+     ├─ Instant CRUD endpoints for every table
+     ├─ Built-in filtering, sorting, pagination
+     └─ Real-time capable endpoints
+     
+     Example endpoints shown:
+     - GET /rest/v1/leads
+     - POST /rest/v1/leads
+     - PATCH /rest/v1/leads?id=123
+     - DELETE /rest/v1/leads?id=123
+
+  2. Row Level Security (RLS) - MANDATORY
+     ├─ Security at database level (not app code)
+     ├─ Complete SQL examples for policies
+     ├─ User isolation rules using auth.uid()
+     ├─ Broker team access patterns
+     └─ Cannot be bypassed
+
+     SQL example included:
+     - Users see own leads policy
+     - Users update own leads policy
+     - Brokers see team leads policy
+
+  3. Authentication (GoTrue)
+     ├─ Email/Password with hashing
+     ├─ Magic Links (passwordless)
+     ├─ OAuth providers (Google, GitHub, Microsoft)
+     ├─ Automatic JWT token handling
+     └─ User context for RLS
+
+  4. Edge Functions (Serverless)
+     ├─ TypeScript/Deno functions
+     ├─ External API calls (RESO, Google Calendar)
+     ├─ Email/SMS notifications
+     ├─ Scheduled tasks via pg_cron
+     ├─ Webhooks handling
+     └─ Complex logic execution
+
+     Complete working example:
+     - Lead scoring Edge Function
+     - Deno setup
+     - Supabase client initialization
+     - Interaction counting
+     - Score calculation
+     - Database update
+
+  5. Database Triggers & Automation
+     ├─ Auto-assign managers to listings
+     ├─ Calculate lead scores automatically
+     ├─ Log audit trails
+     ├─ Update denormalized fields
+     
+     SQL example included:
+     - Auto-assign manager function
+     - Trigger setup on properties table
+
+  6. Realtime Subscriptions
+     ├─ Instant updates on data changes
+     ├─ Frontend listening patterns
+     ├─ Real-time dashboard updates
+     ├─ Multi-user collaboration
+
+     TypeScript example included:
+     - Lead subscription setup
+     - Payload handling
+     - UI state updates
+
+✓ DATA SECURITY LAYERS (4 layers)
+
+  Layer 1: Row Level Security (RLS)
+  ├─ Enforced at database level
+  ├─ Applies to all queries
+  └─ Cannot be bypassed
+
+  Layer 2: Authentication
+  ├─ JWT tokens from GoTrue
+  ├─ Token expiration (15min/7-day)
+  └─ OAuth providers
+
+  Layer 3: Role-Based Access Control (RBAC)
+  ├─ Admin (full access)
+  ├─ Broker/Manager (team access)
+  ├─ Agent (assigned leads only)
+  └─ Client (read-only)
+
+  Layer 4: Data Validation
+  ├─ Database constraints
+  ├─ PostgreSQL type enforcement
+  └─ Trigger-based validation
+
+✓ LEAD SCORING & ROUTING LOGIC
+
+  Automated Qualification System
+  ├─ Score 0-100 calculation
+  ├─ Property views: +5 per view (max 20)
+  ├─ Email opens: +3 per open (max 15)
+  ├─ Call interactions: +10 per call (max 30)
+  ├─ Meetings: +20 per meeting (max 40)
+
+  SQL function included:
+  - calculate_lead_score function
+  - Interaction counting logic
+  - Score capping at 100
+
+  Routing Rules:
+  ├─ 0-30 (Low): Nurture sequence
+  ├─ 31-70 (Qualified): Assign within 4 hours
+  └─ 71+ (Hot): Immediate assignment + notification
+
+✓ IMPLEMENTATION ORDER (Vibe Coding Flow)
+
+  Step-by-step guide:
+  1. Initialize Supabase Project
+     └─ supabase init && supabase start
+  
+  2. Create PostgreSQL Schema
+     └─ Define all tables, constraints, relationships
+  
+  3. Enable Row Level Security (RLS)
+     └─ Add policies to every table
+     └─ Test with different roles
+  
+  4. Setup Authentication
+     └─ Configure OAuth providers
+     └─ Setup Magic Links
+     └─ Test login flows
+  
+  5. Implement Realtime
+     └─ Enable Realtime extension
+     └─ Subscribe to critical tables
+     └─ Test instant updates
+  
+  6. Create Edge Functions
+     └─ RESO API sync
+     └─ Lead scoring
+     └─ Notifications
+     └─ Scheduled tasks
+  
+  7. Add Database Triggers
+     └─ Auto-assign managers
+     └─ Calculate scores
+     └─ Audit logging
+     └─ Denormalized updates
+  
+  8. Deploy & Monitor
+     └─ Use Supabase Dashboard
+     └─ Monitor function execution
+     └─ Track query performance
+     └─ Setup alerts
+
+✓ KEY "VIBE CODING" PRINCIPLES
+
+  ✅ No manual API code - PostgREST handles CRUD
+  ✅ Security at database layer - RLS enforced everywhere
+  ✅ Serverless functions - No server management
+  ✅ Real-time by default - Instant UI updates
+  ✅ TypeScript everywhere - Type safety
+  ✅ Minimal boilerplate - Focus on features
+  ✅ Automated triggers - Less manual code
+  ✅ Instant feedback - Changes reflected immediately
+
+═══════════════════════════════════════════════════════════════════════════
+
+📊 WHAT'S NOW IN THE DOCUMENT
+═══════════════════════════════════════════════════════════════════════════
+
+Line Count: 1,416 (increased from 1,108)
+New Lines Added: ~300 lines of backend architecture
+
+Sections Now Include:
+✓ Complete Dependencies List (37 packages)
+✓ Project Overview & Goals
+✓ Technology Stack (with Supabase BaaS details)
+✓ 🆕 Backend Architecture (Supabase BaaS - "Vibe Coding")
+✓ Complete Folder Structure (40+ files)
+✓ Database Schema (12 tables)
+✓ Features by Dashboard (24+ features)
+✓ Development Phases (4 phases, 10 weeks)
+✓ GitHub Issues (12 issues)
+✓ Acceptance Criteria
+✓ Performance Targets
+✓ Security & Compliance
+✓ Testing Strategy
+✓ Deployment Plan
+✓ Sign-Off Section
+
+═══════════════════════════════════════════════════════════════════════════
+
+🎯 BACKEND ARCHITECTURE HIGHLIGHTS
+═══════════════════════════════════════════════════════════════════════════
+
+✓ THREE-TIER ARCHITECTURE
+  ├─ Simplified and clear
+  ├─ Shows data flow
+  └─ Easy to understand
+
+✓ SIX CORE FEATURES EXPLAINED
+  ├─ PostgREST (auto-generated APIs)
+  ├─ Row Level Security (mandatory)
+  ├─ GoTrue (authentication)
+  ├─ Edge Functions (serverless)
+  ├─ Database Triggers (automation)
+  └─ Realtime Subscriptions (instant updates)
+
+✓ COMPLETE CODE EXAMPLES
+  ├─ RLS SQL policies
+  ├─ Edge Function TypeScript
+  ├─ Database triggers
+  ├─ Realtime subscriptions
+  └─ Lead scoring algorithm
+
+✓ FOUR SECURITY LAYERS
+  ├─ RLS at database level
+  ├─ JWT authentication
+  ├─ Role-based access control
+  └─ Data validation triggers
+
+✓ AUTOMATED LEAD ROUTING
+  ├─ 0-100 scoring system
+  ├─ Automatic qualification
+  ├─ Three-tier routing (Low/Qualified/Hot)
+  └─ SQL implementation included
+
+✓ STEP-BY-STEP IMPLEMENTATION
+  ├─ 8 clear steps
+  ├─ Correct order
+  ├─ Commands provided
+  └─ Testing guidance
+
+✓ VIBE CODING PRINCIPLES
+  ├─ 8 key principles listed
+  ├─ Focus on developer velocity
+  ├─ Minimal boilerplate
+  ├─ Security by default
+
+═══════════════════════════════════════════════════════════════════════════
+
+✨ HOW THIS ARCHITECTURE WORKS WITH YOUR CRM
+═══════════════════════════════════════════════════════════════════════════
+
+FRONTEND (Next.js + React)
+  ↓↑
+SUPABASE APIs (PostgREST auto-generated)
+  ↓↑
+PostgreSQL Database (with RLS policies)
+  ↓↑
+Edge Functions (Serverless tasks)
+  ↓↑
+External APIs (RESO, Calendar, SMS, Email)
+
+ALL BOUND TOGETHER BY:
+✓ GoTrue Authentication
+✓ RLS Security Policies
+✓ Real-time Subscriptions
+✓ Database Triggers
+✓ Automatic Scoring & Routing
+
+═══════════════════════════════════════════════════════════════════════════
+
+🚀 BENEFITS OF THIS ARCHITECTURE
+═══════════════════════════════════════════════════════════════════════════
+
+Developer Velocity:
+✓ No backend development - PostgREST handles APIs
+✓ No server management - Serverless Edge Functions
+✓ No authentication code - GoTrue handles everything
+✓ No real-time code - Supabase Realtime handles sync
+✓ Faster iteration - Change database = instant API change
+
+Security:
+✓ RLS enforced at database level (cannot be bypassed)
+✓ Authentication built-in and secure
+✓ Four-layer security model
+✓ Audit logging via triggers
+✓ No manual permission checking
+
+Scalability:
+✓ PostgreSQL handles millions of rows
+✓ Edge Functions auto-scale
+✓ Real-time can handle thousands of connections
+✓ Built-in caching and optimization
+
+Cost:
+✓ No backend servers to manage
+✓ Pay only for what you use (serverless)
+✓ Automatic scaling (no over-provisioning)
+✓ Reduced operational complexity
+
+═══════════════════════════════════════════════════════════════════════════
+
+✅ COMPLETE SCOPE NOW INCLUDES
+═══════════════════════════════════════════════════════════════════════════
+
+✓ Dependencies (37 packages)
+✓ Architecture (Supabase BaaS + vibe coding)
+✓ Database (12 tables with RLS)
+✓ Features (24+ features across 4 dashboards)
+✓ Security (4-layer model with examples)
+✓ Lead Scoring (automated 0-100 system)
+✓ Implementation Plan (8-step process)
+✓ Code Examples (SQL, TypeScript)
+✓ Performance Targets (15+ metrics)
+✓ Testing Strategy (unit, integration, E2E)
+✓ Deployment (CI/CD with GitHub Actions)
+✓ Timeline (10 weeks, 4 phases)
+✓ Sign-Off (ready to approve)
+
+═══════════════════════════════════════════════════════════════════════════
+
+📋 QUICK REFERENCE
+═══════════════════════════════════════════════════════════════════════════
+
+Key Files to Read:
+1. SNT_CRM_FINAL_SCOPE_OF_WORK.md (main document)
+2. ARCHITECTURE_GUIDE.md (frontend patterns)
+3. SNT_CRM_Enhanced_Cursor_Prompt.docx (setup instructions)
+
+Key Sections in Main Document:
+- Lines 26-220: Complete Dependencies List
+- Lines 240-540: Backend Architecture (NEW)
+- Lines 541-900: Folder Structure + Database Schema
+- Lines 901-1200: Features + Development Plan
+- Lines 1201-1416: Timeline + Security + Testing
+
+═══════════════════════════════════════════════════════════════════════════
+
+                    ✅ BACKEND ARCHITECTURE COMPLETE ✅
+
+      Your scope of work now includes:
+      ✓ Frontend architecture (Next.js + React)
+      ✓ Backend architecture (Supabase BaaS)
+      ✓ Database architecture (PostgreSQL + RLS)
+      ✓ Security architecture (4 layers)
+      ✓ Complete implementation plan
+      ✓ Code examples (SQL & TypeScript)
+      ✓ All dependencies documented
+      ✓ All features specified
+
+═══════════════════════════════════════════════════════════════════════════
+
+Version: 3.0 (Complete with Backend Architecture)
+Date: February 2026
+Status: ✅ READY FOR DEVELOPMENT & APPROVAL
+
