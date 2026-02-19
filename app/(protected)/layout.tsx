@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
-import { createClient } from '@supabase/supabase-js';
+import { createSupabaseClientWithCookies } from '@/lib/supabase';
 import { Sidebar } from '@/components/layout/Sidebar';
 
 export default async function ProtectedLayout({
@@ -10,21 +10,12 @@ export default async function ProtectedLayout({
 }) {
   const cookieStore = await cookies();
   
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
   // Get all cookies as a string for the Cookie header
   const cookieString = cookieStore.getAll()
     .map(cookie => `${cookie.name}=${cookie.value}`)
     .join('; ');
 
-  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-    global: {
-      headers: {
-        Cookie: cookieString,
-      },
-    },
-  });
+  const supabase = createSupabaseClientWithCookies(cookieString);
 
   const { data: { session } } = await supabase.auth.getSession();
 

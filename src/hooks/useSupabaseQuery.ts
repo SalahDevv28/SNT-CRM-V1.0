@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseClient } from '@/lib/supabase';
 import type { PostgrestError } from '@supabase/supabase-js';
 
 interface UseSupabaseQueryOptions<T extends { id: string }> {
@@ -22,6 +22,7 @@ export function useSupabaseQuery<T extends { id: string }>(
       setLoading(true);
       setError(null);
 
+      const supabase = getSupabaseClient();
       let query = supabase.from(tableName).select('*');
 
       if (queryBuilder) {
@@ -49,6 +50,7 @@ export function useSupabaseQuery<T extends { id: string }>(
   const refetch = () => fetchData();
 
   const insert = async (record: Partial<T>) => {
+    const supabase = getSupabaseClient();
     const { data, error } = await supabase.from(tableName).insert(record).select().single();
     if (!error && data) {
       setData((prev) => [...prev, data]);
@@ -57,6 +59,7 @@ export function useSupabaseQuery<T extends { id: string }>(
   };
 
   const update = async (id: string, updates: Partial<T>) => {
+    const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from(tableName)
       .update(updates)
@@ -70,6 +73,7 @@ export function useSupabaseQuery<T extends { id: string }>(
   };
 
   const remove = async (id: string) => {
+    const supabase = getSupabaseClient();
     const { error } = await supabase.from(tableName).delete().eq('id', id);
     if (!error) {
       setData((prev) => prev.filter((item) => item.id !== id));
@@ -102,6 +106,7 @@ export function useSupabaseRealtime<T extends { id: string }>(
       fetchData();
     }
 
+    const supabase = getSupabaseClient();
     const subscription = supabase
       .channel(`public:${tableName}`)
       .on(
@@ -136,6 +141,7 @@ export function useSupabaseRealtime<T extends { id: string }>(
       setLoading(true);
       setError(null);
 
+      const supabase = getSupabaseClient();
       const { data: result, error } = await supabase.from(tableName).select('*');
 
       if (error) throw error;
