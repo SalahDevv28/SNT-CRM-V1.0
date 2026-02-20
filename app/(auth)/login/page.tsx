@@ -6,7 +6,7 @@ import { signIn } from '@/lib/auth';
 import { useAuthStore } from '@/stores/authStore';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseClient } from '@/lib/supabase';
 import type { User } from '@/types/database';
 
 export default function LoginPage() {
@@ -27,9 +27,7 @@ export default function LoginPage() {
         toast.error(error.message);
       } else if (data.user) {
         // Fetch full user profile from users table
-        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-        const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-        const supabase = createClient(supabaseUrl, supabaseAnonKey);
+        const supabase = getSupabaseClient();
 
         const { data: userProfile } = await supabase
           .from('users')
