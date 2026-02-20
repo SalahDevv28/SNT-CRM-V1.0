@@ -16,6 +16,22 @@ export function getSupabaseClient(): SupabaseClient {
         autoRefreshToken: true,
         persistSession: true,
         detectSessionInUrl: true,
+        storage: {
+          getItem: (key) => {
+            if (typeof document === 'undefined') return null;
+            const cookies = document.cookie.split(';');
+            const cookie = cookies.find(c => c.trim().startsWith(`${key}=`));
+            return cookie ? decodeURIComponent(cookie.split('=')[1]) : null;
+          },
+          setItem: (key, value) => {
+            if (typeof document === 'undefined') return;
+            document.cookie = `${key}=${encodeURIComponent(value)};path=/;max-age=31536000;SameSite=Lax`;
+          },
+          removeItem: (key) => {
+            if (typeof document === 'undefined') return;
+            document.cookie = `${key}=;path=/;max-age=0`;
+          },
+        },
       },
     });
   }
