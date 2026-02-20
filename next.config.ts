@@ -2,7 +2,6 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
   images: {
     remotePatterns: [
       {
@@ -10,9 +9,6 @@ const nextConfig: NextConfig = {
         hostname: '**.supabase.co',
       },
     ],
-  },
-  experimental: {
-    appDir: true,
   },
 };
 
