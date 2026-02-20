@@ -16,6 +16,6 @@ export default async function HomePage() {
   if (session) {
     redirect('/(protected)/dashboard');
   } else {
-    redirect('/(auth)/login');
+    redirect('/login');
   }
 }
