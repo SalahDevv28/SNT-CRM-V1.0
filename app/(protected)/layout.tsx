@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
-import { createSupabaseClientWithCookies } from '@/lib/supabase';
+import { createServerClient } from '@supabase/ssr';
 import { Sidebar } from '@/components/layout/Sidebar';
 
 export default async function ProtectedLayout({
@@ -9,13 +9,17 @@ export default async function ProtectedLayout({
   children: React.ReactNode;
 }) {
   const cookieStore = await cookies();
-  
-  // Get all cookies as a string for the Cookie header
-  const cookieString = cookieStore.getAll()
-    .map(cookie => `${cookie.name}=${cookie.value}`)
-    .join('; ');
 
-  const supabase = createSupabaseClientWithCookies(cookieString);
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll: () => cookieStore.getAll(),
+        setAll: () => {},
+      },
+    }
+  );
 
   const { data: { session } } = await supabase.auth.getSession();
 
@@ -23,7 +27,6 @@ export default async function ProtectedLayout({
     redirect('/login');
   }
 
-  // Fetch user data from the users table
   const { data: user } = await supabase
     .from('users')
     .select('*')
