@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { createServerClient } from '@supabase/ssr';
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
@@ -18,18 +19,33 @@ export async function middleware(request: NextRequest) {
                      pathname.startsWith('/signup') ||
                      pathname.startsWith('/forgot-password');
 
-  // Get Supabase auth tokens from cookies
-  const accessToken = request.cookies.get('sb-access-token');
-  const refreshToken = request.cookies.get('sb-refresh-token');
+  // Create Supabase client to check session
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get: (name) => request.cookies.get(name)?.value,
+        set: (name, value) => {
+          request.cookies.set(name, value);
+        },
+        remove: (name) => {
+          request.cookies.delete(name);
+        },
+      },
+    }
+  );
 
-  // If accessing protected route without tokens, redirect to login
-  if (isProtectedRoute && (!accessToken || !refreshToken)) {
+  const { data: { session } } = await supabase.auth.getSession();
+
+  // If accessing protected route without session, redirect to login
+  if (isProtectedRoute && !session) {
     const url = new URL('/login', request.url);
     return NextResponse.redirect(url);
   }
 
-  // If accessing auth route with tokens, redirect to dashboard
-  if (isAuthRoute && accessToken && refreshToken) {
+  // If accessing auth route with session, redirect to dashboard
+  if (isAuthRoute && session) {
     const url = new URL('/dashboard', request.url);
     return NextResponse.redirect(url);
   }
@@ -39,7 +55,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Skip all static files, images, etc.
     '/((?!_next/static|_next/image|favicon.ico).*)',
   ],
 };
